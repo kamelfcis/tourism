@@ -1,6 +1,5 @@
 *.pt  # Exclude large model weight files
 *.onnx
-static/weights/
 logs/
 datasets/
 models/
