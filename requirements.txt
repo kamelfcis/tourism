@@ -2,7 +2,6 @@
 torch
 torchvision
 opencv-python-headless  # Smaller alternative to opencv-python
-scipy  # Install without version lock to avoid heavy dependencies
 ultralytics  # Consider running locally instead of in Heroku
 annotated-types==0.7.0
 blinker==1.9.0
@@ -25,10 +24,8 @@ kiwisolver==1.4.8
 MarkupSafe==3.0.2
 matplotlib==3.10.0
 mpmath==1.3.0
-networkx==3.4.2
 numpy==2.1.1
 packaging==24.2
-pandas==2.2.3
 pillow==11.1.0
 psutil==6.1.1
 py-cpuinfo==9.0.0
