@@ -1,6 +1,5 @@
 import os
-import requests
-from flask import Flask, request, Response 
+from flask import Flask, request, Response
 import torch
 from ultralytics import YOLO
 from PIL import Image
@@ -8,52 +7,42 @@ import io
 import json  
 
 app = Flask(__name__)
- 
 
-# Download the YOLOv8 model dynamically if not available
-MODEL_DIR = os.path.join(os.getcwd(), "static", "weights")
-MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
-MODEL_URL = "https://drive.google.com/file/d/1RHUOfNC17AwNwr4lJNkoI9EmZFmpmwwK/view?usp=sharing"  # Replace with Google Drive/S3 URL
+# Define model path
+MODEL_PATH = "static/weights/best.pt"
 
-if not os.path.exists(MODEL_DIR):
-    os.makedirs(MODEL_DIR)
+# Ensure model directory exists
+if not os.path.exists(os.path.dirname(MODEL_PATH)):
+    os.makedirs(os.path.dirname(MODEL_PATH))
 
+# Load YOLOv8 model (Ensure the model is manually placed in the path)
 if not os.path.exists(MODEL_PATH):
-    print("Downloading YOLO model...")
-    response = requests.get(MODEL_URL, stream=True)
-    with open(MODEL_PATH, "wb") as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
+    raise FileNotFoundError(f"Model file not found at {MODEL_PATH}. Please upload 'best.pt' manually.")
 
-# Load YOLOv8 Model (CPU-friendly)
+# Load YOLOv8 model (CPU Mode)
 model = YOLO(MODEL_PATH)
 
 # Dictionary storing descriptions for each king/queen
 king_descriptions = {
     "Tutankhamun": (
         "Tutankhamun (1332–1323 BCE), of the 18th Dynasty, became pharaoh at a young age. "
-        "He is best known for his nearly intact tomb, discovered in 1922, which provided an unprecedented insight into ancient Egyptian burial customs. "
-        "His reign marked the restoration of traditional Egyptian religion after the radical changes introduced by his predecessor, Akhenaten."
+        "He is best known for his nearly intact tomb, discovered in 1922."
     ),
     "Ramesses II": (
-        "Ramesses II (1279–1213 BCE), also known as Ramesses the Great, was one of Egypt's most powerful and longest-reigning pharaohs, ruling during the 19th Dynasty. "
-        "He is famed for his military campaigns, the construction of the magnificent Abu Simbel temples, and signing the first recorded peace treaty with the Hittites. "
-        "His legacy is marked by grand monuments and an era of prosperity."
+        "Ramesses II (1279–1213 BCE), also known as Ramesses the Great, was one of Egypt's most powerful pharaohs. "
+        "He is famed for his military campaigns and monumental constructions."
     ),
     "Akhenaten": (
-        "Akhenaten (1353–1336 BCE), of the 18th Dynasty, is often called the 'heretic pharaoh' for his religious revolution. "
-        "He abandoned the traditional Egyptian pantheon in favor of worshiping Aten, the sun disk, establishing Egypt's first monotheistic religion. "
-        "He built the city of Amarna as the new religious capital, but his reforms were reversed after his death."
+        "Akhenaten (1353–1336 BCE), of the 18th Dynasty, is known for his religious revolution. "
+        "He promoted monotheism by worshiping Aten, the sun disk."
     ),
     "Thutmose III": (
-        "Thutmose III (1479–1425 BCE), of the 18th Dynasty, is known as the 'Napoleon of Egypt' due to his unparalleled military campaigns. "
-        "He expanded Egypt’s empire to its greatest territorial extent, leading 17 victorious military expeditions. "
-        "His reign also saw advancements in art, architecture, and administration, securing Egypt's golden age."
+        "Thutmose III (1479–1425 BCE), of the 18th Dynasty, was an exceptional military leader. "
+        "He expanded Egypt’s empire significantly through his campaigns."
     ),
     "Nefertiti": (
         "Nefertiti (c. 1370–1330 BCE), of the 18th Dynasty, was the queen and great royal wife of Akhenaten. "
-        "She played a crucial role in the religious transformation of Egypt, alongside her husband, promoting the worship of Aten. "
-        "Her iconic bust, discovered in 1912, remains one of the most famous symbols of ancient Egyptian beauty and power."
+        "Her famous bust remains a symbol of beauty and power."
     )
 }
 
@@ -66,7 +55,7 @@ def predict():
     img = Image.open(io.BytesIO(file.read()))
 
     # Run inference on CPU
-    results = model(img, device="cpu")  # Force CPU usage
+    results = model(img)  # Runs on CPU as per your requirement
 
     # Get the predicted class
     pred_class = results[0].probs.top1 if hasattr(results[0], "probs") else None
@@ -76,7 +65,7 @@ def predict():
     # Fetch the description
     description = king_descriptions.get(predicted_king, "Description not available.")
 
-    # Ordered response
+    # Response
     response_data = {
         "prediction": predicted_king,
         "description": description
