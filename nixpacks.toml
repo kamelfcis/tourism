@@ -1,5 +1,15 @@
 [build]
-packages = ["ffmpeg", "libglvnd", "mesa", "mesa-dri-drivers", "xorg.libX11", "xorg.libXext", "xorg.libXrender"]
+packages = [
+  "ffmpeg",
+  "libglvnd",
+  "mesa",
+  "mesa-dri-drivers",
+  "xorg.libX11",
+  "xorg.libXext",
+  "xorg.libXrender",
+  "xorg.libSM",
+  "xorg.libICE"
+]
 
 [start]
 cmd = "gunicorn -w 4 -b 0.0.0.0:$PORT app:app"
