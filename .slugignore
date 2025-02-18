@@ -1,4 +1,3 @@
-*.pt  # Exclude large model weight files
 *.onnx
 logs/
 datasets/
