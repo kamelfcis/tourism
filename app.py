@@ -22,8 +22,8 @@ if not os.path.exists(MODEL_PATH):
 
 # Fix: Load YOLOv8 model with weights_only=False
 try:
-    torch.serialization.default_load_weights_only = False  # Ensure full model loading
-    model = YOLO(MODEL_PATH)  # Force loading full model
+    torch.serialization.add_safe_globals(["ultralytics.nn.tasks.ClassificationModel"])  # Allowlist the YOLO model class
+    model = YOLO(MODEL_PATH, weights_only=False)  # Ensure full model loading
 except Exception as e:
     raise RuntimeError(f"🚨 Failed to load YOLO model: {e}")
 
