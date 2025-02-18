@@ -1,9 +1,9 @@
+*.pt  # Exclude large model weight files
+*.onnx
+static/weights/
+logs/
+datasets/
+models/
 __pycache__/
 *.pyc
-.git/
-.venv/
-myenv/
-data/
-logs/
-models/
-datasets/
+venv/
