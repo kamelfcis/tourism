@@ -20,9 +20,10 @@ if not os.path.exists(MODEL_PATH):
         f"⚠️ Model file not found at {MODEL_PATH}. Please upload 'best.pt' manually."
     )
 
-# Load YOLOv8 model (Forcing CPU mode)
+# Fix: Load YOLOv8 model with weights_only=False
 try:
-    model = YOLO(MODEL_PATH)
+    torch.serialization.default_load_weights_only = False  # Ensure full model loading
+    model = YOLO(MODEL_PATH)  # Force loading full model
 except Exception as e:
     raise RuntimeError(f"🚨 Failed to load YOLO model: {e}")
 
