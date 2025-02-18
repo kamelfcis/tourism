@@ -1,3 +1,5 @@
-# nixpacks.toml
+[build]
+packages = ["ffmpeg", "libglvnd", "mesa", "mesa-dri-drivers", "xorg.libX11", "xorg.libXext", "xorg.libXrender"]
+
 [start]
-cmd = "gunicorn app:app"
+cmd = "gunicorn -w 4 -b 0.0.0.0:$PORT app:app"
