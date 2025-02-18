@@ -2,7 +2,7 @@
 torch
 torchvision
 opencv-python-headless  # Smaller alternative to opencv-python
-ultralytics  # Consider running locally instead of in Heroku
+ultralytics==8.1.0  # Consider running locally instead of in Heroku
 Flask==3.1.0
 Flask-Cors==5.0.0
 gunicorn==23.0.0
