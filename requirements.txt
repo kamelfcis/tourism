@@ -1,5 +1,6 @@
-torch==2.1.0+cpu  # Lighter version, avoids unnecessary CUDA dependencies
-torchvision==0.15.1+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.1.0
+torchvision==0.15.1
 opencv-python-headless  # Smaller alternative to opencv-python
 scipy  # Install without version lock to avoid heavy dependencies
 ultralytics  # Consider running locally instead of in Heroku
