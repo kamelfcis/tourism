@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.git/
+.venv/
+venv/
+data/
+logs/
+models/
+datasets/
+static/uploads/
