@@ -1,7 +1,7 @@
 Flask==3.1.0
 Flask-Cors==5.0.0
-torch==2.6.0+cpu --index-url https://download.pytorch.org/whl/cpu
-torchvision==0.21.0+cpu --index-url https://download.pytorch.org/whl/cpu
+torch==2.6.0+cpu
+torchvision==0.21.0+cpu
 ultralytics==8.3.73
 pillow==11.1.0
 requests==2.32.3
