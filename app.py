@@ -20,10 +20,10 @@ if not os.path.exists(MODEL_PATH):
         f"⚠️ Model file not found at {MODEL_PATH}. Please upload 'best.pt' manually."
     )
 
-# Fix: Load YOLOv8 model with weights_only=False
+# Fix: Load YOLOv8 model with compatibility for PyTorch 2.6+
 try:
     torch.serialization.add_safe_globals(["ultralytics.nn.tasks.ClassificationModel"])  # Allowlist the YOLO model class
-    model = YOLO(MODEL_PATH, weights_only=False)  # Ensure full model loading
+    model = YOLO(MODEL_PATH)
 except Exception as e:
     raise RuntimeError(f"🚨 Failed to load YOLO model: {e}")
 
