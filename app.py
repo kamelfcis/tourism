@@ -1,7 +1,6 @@
 import os
 import requests
-from flask import Flask, request, Response
-from flask_cors import CORS
+from flask import Flask, request, Response 
 import torch
 from ultralytics import YOLO
 from PIL import Image
@@ -9,7 +8,7 @@ import io
 import json  
 
 app = Flask(__name__)
-CORS(app)
+ 
 
 # Download the YOLOv8 model dynamically if not available
 MODEL_DIR = os.path.join(os.getcwd(), "static", "weights")
