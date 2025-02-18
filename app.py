@@ -1,4 +1,5 @@
 import os
+import requests
 from flask import Flask, request, Response
 from flask_cors import CORS
 import torch
@@ -8,10 +9,24 @@ import io
 import json  
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app)
 
-# Load the trained YOLOv8 model 
-MODEL_PATH = os.path.join(os.getcwd(), "static", "weights", "best.pt")
+# Download the YOLOv8 model dynamically if not available
+MODEL_DIR = os.path.join(os.getcwd(), "static", "weights")
+MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
+MODEL_URL = "https://drive.google.com/file/d/1RHUOfNC17AwNwr4lJNkoI9EmZFmpmwwK/view?usp=sharing"  # Replace with Google Drive/S3 URL
+
+if not os.path.exists(MODEL_DIR):
+    os.makedirs(MODEL_DIR)
+
+if not os.path.exists(MODEL_PATH):
+    print("Downloading YOLO model...")
+    response = requests.get(MODEL_URL, stream=True)
+    with open(MODEL_PATH, "wb") as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+
+# Load YOLOv8 Model (CPU-friendly)
 model = YOLO(MODEL_PATH)
 
 # Dictionary storing descriptions for each king/queen
@@ -47,23 +62,22 @@ king_descriptions = {
 def predict():
     if 'file' not in request.files:
         return Response(json.dumps({'error': 'No file uploaded'}), status=400, mimetype='application/json')
-    
+
     file = request.files['file']
     img = Image.open(io.BytesIO(file.read()))
-    
-    # Run inference
-    results = model(img)
-    
+
+    # Run inference on CPU
+    results = model(img, device="cpu")  # Force CPU usage
+
     # Get the predicted class
-    #pred_class = results[0].probs.top1 
-    pred_class = results[0].probs.top1 if hasattr(results[0], "probs") else None 
+    pred_class = results[0].probs.top1 if hasattr(results[0], "probs") else None
     class_names = model.names  
-    predicted_king = class_names[pred_class]
+    predicted_king = class_names[pred_class] if pred_class is not None else "Unknown"
 
     # Fetch the description
     description = king_descriptions.get(predicted_king, "Description not available.")
 
-    # oreder the response 
+    # Ordered response
     response_data = {
         "prediction": predicted_king,
         "description": description
