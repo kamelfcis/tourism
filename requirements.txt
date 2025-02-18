@@ -38,8 +38,8 @@ requests==2.32.3
 setuptools==75.8.0
 six==1.17.0
 sympy==1.13.1
-torch==2.6.0+cpu
-torchvision==0.21.0+cpu
+torch==2.5.1
+torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cpu
 tqdm==4.67.1
 typing_extensions==4.12.2
 tzdata==2025.1
