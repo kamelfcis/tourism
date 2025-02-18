@@ -2,9 +2,9 @@ __pycache__/
 *.pyc
 .git/
 .venv/
-venv/
+myenv/
 data/
 logs/
 models/
 datasets/
-static/uploads/
+static/weights/
